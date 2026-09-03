@@ -1,0 +1,8 @@
+services:
+  ds-pico-setup:
+    build: .
+    
+    container_name: ds-pico-setup
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
