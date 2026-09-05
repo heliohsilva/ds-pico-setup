@@ -6,3 +6,8 @@ services:
     pull_policy: always
     tty: true
     restart: unless-stopped
+    volumes: 
+      - ./misc:/app/misc/
+
+volumes:
+  misc:

@@ -31,6 +31,7 @@ ENV WONDERFUL_TOOLCHAIN=/opt/wonderful
 ENV PATH=/opt/wonderful/bin:$PATH
 ENV TERM=xterm
 ENV WF_URL=https://wonderful.asie.pl/bootstrap/wf-installer.sh
+ENV DLDITOOL=/opt/wonderful/thirdparty/blocksds/core/tools/dlditool/dlditool
 
 RUN wget -O /tmp/wf-installer.sh "$WF_URL" && \
     chmod 777 /tmp/wf-installer.sh
@@ -44,7 +45,6 @@ RUN expect -c '\
         expect eof \
     '
 
-
 # Setting up BlocksDS
 
 RUN yes | wf-pacman -Syu && \
@@ -52,6 +52,32 @@ RUN yes | wf-pacman -Syu && \
     wf-config repo enable blocksds && \
     yes | wf-pacman -Syu && \
     yes | wf-pacman -S blocksds-toolchain blocksds-docs && \
-    ln -s /opt/wonderful/thirdparty/blocksds /opt/blocksds && \
-    source /opt/wonderful/bin/wf-env
+    ln -s /opt/wonderful/thirdparty/blocksds /opt/blocksds
 
+
+# Compiling pico-loader
+
+RUN git clone --recursive https://github.com/LNH-team/pico-loader.git && cd pico-loader && \
+    git submodule update --init && \
+    make
+
+# Compiling DLDI driver
+
+RUN git clone --recursive https://github.com/LNH-team/dspico-dldi.git && cd dspico-dldi && \
+    git submodule update --init && \
+    make
+
+# Compiling DSPico Bootloader
+
+RUN git clone --recursive https://github.com/LNH-team/dspico-bootloader.git && cd dspico-bootloader && \
+    git submodule update --init && \
+    make
+
+## Patch the bootloader
+RUN $DLDITOOL /app/dspico-dldi/DSpico.dldi /app/dspico-bootloader/BOOTLOADER.nds
+
+# Compiling DSRomEncrypton
+
+RUN git clone --recursive https://github.com/Gericom/DSRomEncryptor.git && cd DSRomEncryptor && \
+    git submodule update --init && \
+    dotnet build
