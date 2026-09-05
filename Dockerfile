@@ -5,8 +5,6 @@ WORKDIR /app
 ARG USER=wonderful
 RUN useradd -m $USER
 
-COPY . .
-
 # Setting up default configs and .NET 9.0
 
 RUN apt-get update \
@@ -19,34 +17,41 @@ RUN apt-get update \
         gcc-arm-none-eabi \
         build-essential \
         git \
+        expect \
+        wget \
         dotnet-sdk-9.0 \
         aspnetcore-runtime-9.0 \
     && \
     rm -rf /var/lib/apt/lists/*
 
 
-# Setting up wonderful pacman and BlockDS
+# Setting up wonderful pacman
 
 ENV WONDERFUL_TOOLCHAIN=/opt/wonderful
 ENV PATH=/opt/wonderful/bin:$PATH
+ENV TERM=xterm
+ENV WF_URL=https://wonderful.asie.pl/bootstrap/wf-installer.sh
 
-RUN mkdir /opt/wonderful && \
-    cd /opt/wonderful && tar xzvf /app/wf-bootstrap-x86_64.tar.gz -C . && \
-    yes | wf-pacman -Syu && \
+RUN wget -O /tmp/wf-installer.sh "$WF_URL" && \
+    chmod 777 /tmp/wf-installer.sh
+
+RUN expect -c '\
+        spawn /tmp/wf-installer.sh; \
+        expect "Enter choice \[1-3\]:"; \
+        send "1\r"; \
+        expect "Enter choice \[1-4\]:"; \
+        send "1\r"; \
+        expect eof \
+    '
+
+
+# Setting up BlocksDS
+
+RUN yes | wf-pacman -Syu && \
     yes | wf-pacman -S wf-tools && \
     wf-config repo enable blocksds && \
-    yes | wf-pacman -Syu
-    # yes | wf-pacman -S toolchain-gcc-arm-none-eabi toolchain-llvm-teak toolchain-gcc-xtensa-elf 
+    yes | wf-pacman -Syu && \
+    yes | wf-pacman -S blocksds-toolchain blocksds-docs && \
+    ln -s /opt/wonderful/thirdparty/blocksds /opt/blocksds && \
+    source /opt/wonderful/bin/wf-env
 
-
-# Setting up BlockDS
-
-# RUN cd /app/sdk && \
-#     git clone --recurse-submodules https://codeberg.org/blocksds/sdk.git . && \
-#     BLOCKSDS=$PWD make -j`nproc` && \
-#     mkdir /opt/blocksds/ && \
-#     chown $USER:$USER /opt/blocksds && \
-#     mkdir /opt/blocksds/external && \
-#     make install
-
-# ENV DLDITOOL=/opt/wonderful/thirdparty/blocksds/core/tools/dlditool/dlditool
