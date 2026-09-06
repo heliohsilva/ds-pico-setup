@@ -5,6 +5,9 @@ WORKDIR /app
 ARG USER=wonderful
 RUN useradd -m $USER
 
+ENV MISC=/app/misc
+COPY ./misc/* $MISC/
+
 # Setting up default configs and .NET 9.0
 
 RUN apt-get update \
@@ -85,21 +88,38 @@ RUN git clone --recursive https://github.com/Gericom/DSRomEncryptor.git && cd DS
 ENV EXEDIR=/app/DSRomEncryptor/DSRomEncryptor/bin/Debug/net9.0
 ENV EXE=$EXEDIR/DSRomEncryptor
 
-COPY ./misc/* $EXEDIR/
-
+RUN cp $MISC/bios* $EXEDIR/
 RUN $EXE /app/dspico-bootloader/BOOTLOADER.nds default.nds
+
+# Setting up Wrfuxxed
+
+RUN git clone --recursive https://github.com/LNH-team/dspico-wrfuxxed.git && cd dspico-wrfuxxed && \
+    git submodule update --init && \
+    make
+
+RUN $DLDITOOL /app/dspico-dldi/DSpico.dldi /app/dspico-wrfuxxed/uartBufv060.bin
 
 
 # Setting up dspico-firmware
 
+ENV ROMS=/app/dspico-firmware/roms
+
 RUN git clone https://github.com/LNH-team/dspico-firmware.git && \
     cd dspico-firmware && \
+    git submodule update --init && \
     cd pico-sdk && \
     git submodule update --init && \
     cd .. && \
-    mv /app/default.nds /app/dspico-firmware/roms/ && \
-    chmod +x ./compile.sh && ./compile.sh
+    mv /app/default.nds $ROMS/ 
+
+RUN cp $MISC/wrfu.rom $ROMS/dsimode.nds && \
+    cp /app/dspico-wrfuxxed/uartBufv060.bin /app/dspico-firmware/data/ && \
+    sed -i '/^#DSPICO_ENABLE_WRFUXXED $/s/^# //' /app/dspico-firmware/CMakeLists.txt
+
+RUN chmod +x /app/dspico-firmware/compile.sh && /app/dspico-firmware/compile.sh
+    
 
 # Setting up pico-launcher
 
-# TODO
+# TODO https://github.com/LNH-team/pico-launcher
+# https://github.com/LNH-team/dspico/blob/develop/GUIDE.md
