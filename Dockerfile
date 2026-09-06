@@ -114,7 +114,7 @@ RUN git clone https://github.com/LNH-team/dspico-firmware.git && \
 
 RUN cp $MISC/wrfu.rom $ROMS/dsimode.nds && \
     cp /app/dspico-wrfuxxed/uartBufv060.bin /app/dspico-firmware/data/ && \
-    sed -i '/^#DSPICO_ENABLE_WRFUXXED $/s/^# //' /app/dspico-firmware/CMakeLists.txt
+    sed -i '/^[[:space:]]*#DSPICO_ENABLE_WRFUXXED/s/#//' /app/dspico-firmware/CMakeLists.txt
 
 RUN chmod +x /app/dspico-firmware/compile.sh && /app/dspico-firmware/compile.sh
     
