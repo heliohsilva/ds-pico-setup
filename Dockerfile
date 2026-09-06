@@ -81,3 +81,10 @@ RUN $DLDITOOL /app/dspico-dldi/DSpico.dldi /app/dspico-bootloader/BOOTLOADER.nds
 RUN git clone --recursive https://github.com/Gericom/DSRomEncryptor.git && cd DSRomEncryptor && \
     git submodule update --init && \
     dotnet build
+
+ENV EXEDIR=/app/DSRomEncryptor/DSRomEncryptor/bin/Debug/net9.0
+ENV EXE=$EXEDIR/DSRomEncryptor
+
+COPY ./misc/* $EXEDIR/
+
+RUN $EXE /app/dspico-bootloader/BOOTLOADER.nds default.nds
