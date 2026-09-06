@@ -124,6 +124,3 @@ RUN chmod +x /app/dspico-firmware/compile.sh && /app/dspico-firmware/compile.sh
 RUN git clone --recursive https://github.com/LNH-team/pico-launcher.git && cd pico-launcher && \
     git submodule update --init && \
     make
-
-# TODO https://github.com/LNH-team/pico-launcher
-# https://github.com/LNH-team/dspico/blob/develop/GUIDE.md
