@@ -1,0 +1,12 @@
+{
+    "type": "material",
+    "name": "Material Design 3",
+    "description": "Theme based on Google's Material Design 3.",
+    "author": "Gericom",
+    "primaryColor": {
+        "r": 138,
+        "g": 217,
+        "b": 255
+    },
+    "darkTheme": false
+}
