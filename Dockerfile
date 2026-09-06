@@ -8,7 +8,7 @@ RUN useradd -m $USER
 # Setting up default configs and .NET 9.0
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends software-properties-common \
+    && apt-get install -y --no-install-recommends software-properties-common libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib \
     && rm -rf /var/lib/apt/lists/* && \
     add-apt-repository ppa:dotnet/backports && \
     apt update > /dev/null 2>&1 && \
@@ -88,3 +88,18 @@ ENV EXE=$EXEDIR/DSRomEncryptor
 COPY ./misc/* $EXEDIR/
 
 RUN $EXE /app/dspico-bootloader/BOOTLOADER.nds default.nds
+
+
+# Setting up dspico-firmware
+
+RUN git clone https://github.com/LNH-team/dspico-firmware.git && \
+    cd dspico-firmware && \
+    cd pico-sdk && \
+    git submodule update --init && \
+    cd .. && \
+    mv /app/default.nds /app/dspico-firmware/roms/ && \
+    chmod +x ./compile.sh && ./compile.sh
+
+# Setting up pico-launcher
+
+# TODO
