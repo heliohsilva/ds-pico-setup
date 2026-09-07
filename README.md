@@ -32,6 +32,9 @@ biosdsi7.rom (sha-1 A3AA751EB6BDAAF8A827BA9E03576A6F1AB0F547 (incomplete) or C7C
 
 ## How to Run
 
+> [!IMPORTANT]
+> You will need `docker` installed. See ![here](https://docs.docker.com/get-started/get-docker/)
+
 Now you have the files, make a directory called misc here by running `mkdir misc`, then paste them there.
 
 At this point, this directory should look like this:
