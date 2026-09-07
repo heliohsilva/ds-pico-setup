@@ -2,11 +2,42 @@ FROM ubuntu:24.04
 
 WORKDIR /app
 
-ARG USER=wonderful
+ARG USER=dspico
 RUN useradd -m $USER
 
 ENV MISC=/app/misc
+RUN mkdir -p $MISC
 COPY ./misc/* $MISC/
+
+# check if it has every necessary files
+
+ENV WRFUSHA='2d65fb7a0c62a4f08954b98c95f42b804fccfd26'
+ENV DS7SHA='24f67bdea115a2c847c8813a262502ee1607b7df'
+ENV INCOMPDSI7SHA='a3aa751eb6bdaaf8a827ba9e03576a6f1ab0f547'
+ENV COMPDSI7SHA='c7c7570bfe51c3c7c5da3b01331b94e7e7cb4f53'
+
+RUN has_wrfr=0; \
+    has_ds7=0; \
+    has_dsi7=0; \
+    for file in "$MISC"/*; do \
+        if [ -f "$file" ]; then \
+            hash="$(sha1sum "$file" | awk '{print $1}')"; \
+            if [ "$hash" = $WRFUSHA ]; then \
+                mv "$file" "$MISC/wrfu.rom"; \
+                has_wrfr=1; \
+            elif [ "$hash" = $DS7SHA ]; then \
+                mv "$file" "$MISC/biosnds7.rom"; \
+                has_ds7=1; \
+            elif [ "$hash" = $INCOMPDSI7SHA ] || [ "$hash" = $COMPDSI7SHA ]; then \
+                mv "$file" "$MISC/biosdsi7.rom"; \
+                has_dsi7=1; \
+            fi; \
+        fi; \
+    done;\
+    if [ "$has_wrfr" = 0 ] || [ "$has_ds7" = 0 ] || [ "$has_dsi7" = 0 ]; then \
+        echo "Some required file is missing. Check the docs"; \
+        exit 1; \
+    fi;
 
 # Setting up default configs and .NET 9.0
 
@@ -111,6 +142,7 @@ RUN git clone https://github.com/LNH-team/dspico-firmware.git && \
     git submodule update --init && \
     cd .. && \
     mv /app/default.nds $ROMS/ 
+
 
 RUN cp $MISC/wrfu.rom $ROMS/dsimode.nds && \
     cp /app/dspico-wrfuxxed/uartBufv060.bin /app/dspico-firmware/data/ && \
