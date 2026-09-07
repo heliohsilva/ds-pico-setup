@@ -1,5 +1,8 @@
 # DS-Pico Setup Environment
 
+> [!IMPORTANT]
+> Everything this project does is implement the workflow described ![here](https://github.com/LNH-team/dspico/blob/develop/GUIDE.md)
+
 files needed in ./misc/
 ```yaml
 wrfu tester v0.60 (sha-1 2d65fb7a0c62a4f08954b98c95f42b804fccfd26)
