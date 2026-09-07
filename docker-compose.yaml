@@ -1,13 +1,9 @@
 services:
   ds-pico-setup:
     build: .
-    
+    image: ds-pico-setup    
     container_name: ds-pico-setup
     pull_policy: always
     tty: true
     restart: unless-stopped
-    volumes: 
-      - ./misc:/app/misc/
 
-volumes:
-  misc:
