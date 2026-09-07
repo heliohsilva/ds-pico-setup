@@ -2,7 +2,9 @@
 
 ## What is DS-Pico Setup?
 
-The project **DS-Pico Setup** is a workflow to easily set up your DS-Pico flashcard and enjoy it.
+The project **DS-Pico Setup** is a workflow to easily set up your DS-Pico flashcard and enjoy it ASAP.
+
+If you find this project useful, please consider giving it a star! ⭐
 
 DS-Pico project can be found ![here](https://github.com/LNH-team/dspico). It is an open source DS flashcard built with a raspberry pi pico 2040.
 
