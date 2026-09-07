@@ -14,11 +14,11 @@ I really think DS-Pico is a very nice and useful project, and I think more peopl
 
 To build this project you have to get 3 files: 
 
-- <ins>**WRFU Tester v0.60: **</ins> This is a ROM used to test DSi wifi hardware. Some versions of it have an exploit used to "hack" your DSi and execute non-standard software on it. You can read more about the exploit ![here](https://github.com/LNH-team/dspico-wrfuxxed/blob/develop/wrfuxxed.md). For this porpose, is indispensable that the version be 0.60.
+- <ins>**WRFU Tester v0.60:**</ins> This is a ROM used to test DSi wifi hardware. Some versions of it have an exploit used to "hack" your DSi and execute non-standard software on it. You can read more about the exploit ![here](https://github.com/LNH-team/dspico-wrfuxxed/blob/develop/wrfuxxed.md). For this porpose, is indispensable that the version be 0.60.
 
-- <ins>**NDS Bios (biosnds7): **</ins> NDS bios file. 
+- <ins>**NDS Bios (biosnds7):**</ins> NDS bios file. 
 
-- <ins>**NDSi Bios (biosdsi7): **</ins> NDSi bios file. 
+- <ins>**NDSi Bios (biosdsi7):**</ins> NDSi bios file. 
 
 To check if you have the right files in hand, run `sha1sum` on all of them and compare them to the sha-1 values bellow:
 
