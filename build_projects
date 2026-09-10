@@ -44,12 +44,19 @@ DLDITOOL=/opt/wonderful/thirdparty/blocksds/core/tools/dlditool/dlditool;
 
 cd $APP
 
+### PICO-LOADER
 git clone --recursive https://github.com/LNH-team/pico-loader.git && cd pico-loader
 git submodule update --init
 make
 
 cd ..
-### PICO-LOADER
+
+### DLDI DRIVER
+git clone --recursive https://github.com/LNH-team/dspico-dldi.git && cd dspico-dldi
+git submodule update --init
+make
+
+cd ..
 
 
 
