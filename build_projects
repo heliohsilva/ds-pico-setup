@@ -1,0 +1,66 @@
+#!/bin/bash
+
+MISC=/app/misc;
+
+WRFUSHA='2d65fb7a0c62a4f08954b98c95f42b804fccfd26';
+DS7SHA='24f67bdea115a2c847c8813a262502ee1607b7df';
+INCOMPDSI7SHA='a3aa751eb6bdaaf8a827ba9e03576a6f1ab0f547';
+COMPDSI7SHA='c7c7570bfe51c3c7c5da3b01331b94e7e7cb4f53';
+
+HAS_WRFR=0;
+HAS_DS7=0;
+HAS_DSI7=0;
+
+for file in "$MISC"/*; do
+    if [ -f "$file" ]; then
+        hash="$(sha1sum "$file" | awk '{print $1}')";
+        if [ "${hash}" = "${WRFUSHA}" ]; then
+            if [ "${file}" != "${MISC}/wrfu.rom" ]; then
+                mv "$file" "$MISC/wrfu.rom";
+            fi
+            HAS_WRFR=1;
+        elif [ "${hash}" = "${DS7SHA}" ]; then
+            if [ "${file}" != "${MISC}/biosnds7.rom" ]; then
+                mv "$file" "$MISC/biosnds7.rom";
+            fi
+            HAS_DS7=1;
+        elif [ "${hash}" = "${INCOMPDSI7SHA}" ] || [ "${hash}" = "${COMPDSI7SHA}" ]; then
+            if [ "${file}" != "${MISC}/biosdsi7.rom" ]; then
+                mv "$file" "$MISC/biosdsi7.rom";
+            fi
+            HAS_DSI7=1;
+        fi;
+    fi;
+done;
+if [ "${HASWRFR}" = 0 ] || [ "${HAS_DS7}" = 0 ]; then
+    echo "Some required file is missing. Check the docs";
+        exit 1;
+fi;
+
+
+
+DLDITOOL=/opt/wonderful/thirdparty/blocksds/core/tools/dlditool/dlditool
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+echo "Setup concluído!"
+
+exec bash
