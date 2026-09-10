@@ -1,6 +1,8 @@
 #!/bin/bash
 
 D="ds-pico-setup:/app";
+LAUNCHER=${D}/pico-launcher
+LOADER=${D}/pico-loader
 
 mkdir -p firmware;
 mkdir -p setup;
@@ -8,9 +10,9 @@ mkdir -p setup/roms;
 
 docker cp $D/dspico-firmware/build/DSpico.uf2 ./firmware/;
 
-docker cp $D/pico-launcher/_pico ./setup/;
-docker cp $D/pico-launcher/LAUNCHER.nds ./setup/_picoboot.nds;
-docker cp $D/pico-loader/picoLoader7.bin ./setup/_pico/;
-docker cp $D/pico-loader/picoLoader9_DSPICO.bin ./setup/_pico/picoLoader9.bin;
-docker cp $D/pico-loader/data/aplist.bin ./setup/_pico/aplist.bin;
-docker cp $D/pico-loader/data/savelist.bin ./setup/_pico/savelist.bin;
+docker cp ${LAUNCHER}/_pico ./setup/;
+docker cp ${LAUNCHER}/LAUNCHER.nds ./setup/_picoboot.nds;
+docker cp ${LOADER}/picoLoader7.bin ./setup/_pico/;
+docker cp ${LOADER}/picoLoader9_DSPICO.bin ./setup/_pico/picoLoader9.bin;
+docker cp ${LOADER}/data/aplist.bin ./setup/_pico/aplist.bin;
+docker cp ${LOADER}/data/savelist.bin ./setup/_pico/savelist.bin;

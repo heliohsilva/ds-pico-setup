@@ -71,7 +71,6 @@ ${DLDITOOL} ${DLDIDIR}/DSpico.dldi ./BOOTLOADER.nds
 cp ./BOOTLOADER.nds ${APP}/BOOTLOADER.nds
 
 cd ..
-rm -r ${BOOTLOADERDIR}
 
 ### DSROMENCRYPTON
 DSENCDIR=${APP}/DSRomEncryptor
@@ -125,6 +124,11 @@ fi
 
 chmod +x ${FIRMWAREDIR}/compile.sh && ${FIRMWAREDIR}/compile.sh
 
+
+### PICO-LAUNCHER
+git clone --recursive https://github.com/LNH-team/pico-launcher.git && cd pico-launcher
+git submodule update --init
+make
 
 echo "Setup concluído!"
 
