@@ -68,15 +68,6 @@ RUN chmod +x ./build_projects
 ENTRYPOINT ["./build_projects"]
 
 
-# ## Patch the bootloader
-# RUN $DLDITOOL /app/dspico-dldi/DSpico.dldi /app/dspico-bootloader/BOOTLOADER.nds
-
-# # Compiling DSRomEncrypton
-
-# RUN git clone --recursive https://github.com/Gericom/DSRomEncryptor.git && cd DSRomEncryptor && \
-#     git submodule update --init && \
-#     dotnet build
-
 # ENV EXEDIR=/app/DSRomEncryptor/DSRomEncryptor/bin/Debug/net9.0
 # ENV EXE=$EXEDIR/DSRomEncryptor
 

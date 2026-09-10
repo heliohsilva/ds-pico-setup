@@ -69,6 +69,13 @@ ${DLDITOOL} ${DLDIDIR}/DSpico.dldi ./BOOTLOADER.nds
 
 cd ..
 
+### DSROMENCRYPTON
+
+git clone --recursive https://github.com/Gericom/DSRomEncryptor.git && cd DSRomEncryptor
+git submodule update --init
+dotnet build
+
+cd ..
 
 
 
