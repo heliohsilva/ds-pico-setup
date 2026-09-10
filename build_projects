@@ -106,17 +106,24 @@ fi
 
 cd ..
 
+### DSPICO-FIRMWARE
+FIRMWAREDIR=${APP}/dspico-firmware
+ROMSDIR=${FIRMWAREDIR}roms
 
+git clone https://github.com/LNH-team/dspico-firmware.git && cd dspico-firmware && \
+git submodule update --init
+cd pico-sdk
+git submodule update --init
+cd ..
+mv ${APP}/default.nds ${ROMSDIR}/ 
 
+if [ $HAS_DSI7 = 0 ]; then
+    cp $MISC/wrfu.rom $ROMS/dsimode.nds
+    cp ${APP}/uartBufv060.bin ${FIRMWAREDIR}/data/
+    sed -i '/^[[:space:]]*#DSPICO_ENABLE_WRFUXXED/s/#//' ${FIRMWAREDIR}/CMakeLists.txt
+fi
 
-
-
-
-
-
-
-
-
+chmod +x ${FIRMWAREDIR}/compile.sh && ${FIRMWAREDIR}/compile.sh
 
 
 echo "Setup concluído!"
