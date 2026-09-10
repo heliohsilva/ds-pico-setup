@@ -65,30 +65,4 @@ COPY ./build_projects ./build_projects
 
 RUN chmod +x ./build_projects
 
-ENTRYPOINT ["./build_projects"]
-
-# # Setting up dspico-firmware
-
-# ENV ROMS=/app/dspico-firmware/roms
-
-# RUN git clone https://github.com/LNH-team/dspico-firmware.git && \
-#     cd dspico-firmware && \
-#     git submodule update --init && \
-#     cd pico-sdk && \
-#     git submodule update --init && \
-#     cd .. && \
-#     mv /app/default.nds $ROMS/ 
-
-
-# RUN cp $MISC/wrfu.rom $ROMS/dsimode.nds && \
-#     cp /app/dspico-wrfuxxed/uartBufv060.bin /app/dspico-firmware/data/ && \
-#     sed -i '/^[[:space:]]*#DSPICO_ENABLE_WRFUXXED/s/#//' /app/dspico-firmware/CMakeLists.txt
-
-# RUN chmod +x /app/dspico-firmware/compile.sh && /app/dspico-firmware/compile.sh
-    
-
-# # Setting up pico-launcher
-
-# RUN git clone --recursive https://github.com/LNH-team/pico-launcher.git && cd pico-launcher && \
-#     git submodule update --init && \
-#     make
+RUN ./build_projects

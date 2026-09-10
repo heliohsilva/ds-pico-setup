@@ -1,43 +1,43 @@
 #!/bin/bash
 
-MISC=/app/misc;
-APP=/app;
+MISC=/app/misc
+APP=/app
 
 ### FILE CHECK
 
-WRFUSHA='2d65fb7a0c62a4f08954b98c95f42b804fccfd26';
-DS7SHA='24f67bdea115a2c847c8813a262502ee1607b7df';
-INCOMPDSI7SHA='a3aa751eb6bdaaf8a827ba9e03576a6f1ab0f547';
-COMPDSI7SHA='c7c7570bfe51c3c7c5da3b01331b94e7e7cb4f53';
+WRFUSHA='2d65fb7a0c62a4f08954b98c95f42b804fccfd26'
+DS7SHA='24f67bdea115a2c847c8813a262502ee1607b7df'
+INCOMPDSI7SHA='a3aa751eb6bdaaf8a827ba9e03576a6f1ab0f547'
+COMPDSI7SHA='c7c7570bfe51c3c7c5da3b01331b94e7e7cb4f53'
 
-HAS_WRFR=0;
-HAS_DS7=0;
-HAS_DSI7=0;
+HAS_WRFU=0
+HAS_DS7=0
+HAS_DSI7=0
 
 for file in "$MISC"/*; do
     if [ -f "$file" ]; then
-        hash="$(sha1sum "$file" | awk '{print $1}')";
+        hash="$(sha1sum "$file" | awk '{print $1}')"
         if [ "${hash}" = "${WRFUSHA}" ]; then
             if [ "${file}" != "${MISC}/wrfu.rom" ]; then
-                mv "$file" "$MISC/wrfu.rom";
-            fi
-            HAS_WRFR=1;
+                mv "$file" "$MISC/wrfu.rom"
+            fi;
+            HAS_WRFU=1
         elif [ "${hash}" = "${DS7SHA}" ]; then
             if [ "${file}" != "${MISC}/biosnds7.rom" ]; then
-                mv "$file" "$MISC/biosnds7.rom";
-            fi
-            HAS_DS7=1;
+                mv "$file" "$MISC/biosnds7.rom"
+            fi;
+            HAS_DS7=1
         elif [ "${hash}" = "${INCOMPDSI7SHA}" ] || [ "${hash}" = "${COMPDSI7SHA}" ]; then
             if [ "${file}" != "${MISC}/biosdsi7.rom" ]; then
-                mv "$file" "$MISC/biosdsi7.rom";
-            fi
-            HAS_DSI7=1;
+                mv "$file" "$MISC/biosdsi7.rom"
+            fi;
+            HAS_DSI7=1
         fi;
     fi;
 done;
-if [ "${HASWRFR}" = 0 ] || [ "${HAS_DS7}" = 0 ]; then
-    echo "Some required file is missing. Check the docs";
-        exit 1;
+if [ "${HAS_DS7}" = 0 ]; then
+    echo "Some required file is missing. Check the docs"
+        exit 1
 fi;
 
 cd $APP
@@ -47,7 +47,7 @@ git clone --recursive https://github.com/LNH-team/pico-loader.git && cd pico-loa
 git submodule update --init
 make
 
-cd ..
+cd $APP
 
 ### DLDI DRIVER
 git clone --recursive https://github.com/LNH-team/dspico-dldi.git && cd dspico-dldi
@@ -57,7 +57,7 @@ make
 DLDITOOL=/opt/wonderful/thirdparty/blocksds/core/tools/dlditool/dlditool;
 DLDIDIR=${APP}/dspico-dldi
 
-cd ..
+cd $APP
 
 ### DSPICO BOOTLOADER
 BOOTLOADERDIR=${APP}/dspico-bootloader
@@ -70,7 +70,7 @@ make
 ${DLDITOOL} ${DLDIDIR}/DSpico.dldi ./BOOTLOADER.nds
 cp ./BOOTLOADER.nds ${APP}/BOOTLOADER.nds
 
-cd ..
+cd $APP
 
 ### DSROMENCRYPTON
 DSENCDIR=${APP}/DSRomEncryptor
@@ -79,18 +79,20 @@ git clone --recursive https://github.com/Gericom/DSRomEncryptor.git && cd DSRomE
 git submodule update --init
 dotnet build
 
-cd ..
+cd $APP
 
 EXEDIR=${DSENCDIR}/DSRomEncryptor/bin/Debug/net9.0
 EXE=${EXEDIR}/DSRomEncryptor
 
 cp ${MISC}/bios* ${EXEDIR}/
-$EXE ${APP}/BOOTLOADER.nds default.nds
+$EXE ${APP}/BOOTLOADER.nds ${APP}/default.nds
 
-rm -r ${DSENCDIR}
+
+
+rm -rf "${DSENCDIR}"
 
 ### WRFUXXED
-if [ $HAS_DSI7 = 0 ]; then
+if [ "${HAS_DSI7}" = 1 ] && [ "${HAS_WRFU}" = 1 ]; then
     WRDIR=${APP}/dspico-wrfuxxed
     git clone --recursive https://github.com/LNH-team/dspico-wrfuxxed.git && cd dspico-wrfuxxed
     git submodule update --init
@@ -100,14 +102,14 @@ if [ $HAS_DSI7 = 0 ]; then
 
     cp ${WRDIR}/uartBufv060.bin ${APP}/
 
-    rm -r ${WRDIR}
+    rm -rf "${WRDIR}"
 fi
 
-cd ..
+cd $APP
 
 ### DSPICO-FIRMWARE
 FIRMWAREDIR=${APP}/dspico-firmware
-ROMSDIR=${FIRMWAREDIR}roms
+ROMSDIR=${FIRMWAREDIR}/roms
 
 git clone https://github.com/LNH-team/dspico-firmware.git && cd dspico-firmware && \
 git submodule update --init
@@ -116,7 +118,7 @@ git submodule update --init
 cd ..
 mv ${APP}/default.nds ${ROMSDIR}/ 
 
-if [ $HAS_DSI7 = 0 ]; then
+if [ "${HAS_DSI7}" = 1 ] && [ "${HAS_WRFU}"= 1 ]; then
     cp $MISC/wrfu.rom $ROMS/dsimode.nds
     cp ${APP}/uartBufv060.bin ${FIRMWAREDIR}/data/
     sed -i '/^[[:space:]]*#DSPICO_ENABLE_WRFUXXED/s/#//' ${FIRMWAREDIR}/CMakeLists.txt
@@ -124,6 +126,7 @@ fi
 
 chmod +x ${FIRMWAREDIR}/compile.sh && ${FIRMWAREDIR}/compile.sh
 
+cd ${APP}
 
 ### PICO-LAUNCHER
 git clone --recursive https://github.com/LNH-team/pico-launcher.git && cd pico-launcher
