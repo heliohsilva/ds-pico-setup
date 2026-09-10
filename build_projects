@@ -1,6 +1,9 @@
 #!/bin/bash
 
 MISC=/app/misc;
+APP=/app;
+
+### FILE CHECK
 
 WRFUSHA='2d65fb7a0c62a4f08954b98c95f42b804fccfd26';
 DS7SHA='24f67bdea115a2c847c8813a262502ee1607b7df';
@@ -37,13 +40,16 @@ if [ "${HASWRFR}" = 0 ] || [ "${HAS_DS7}" = 0 ]; then
         exit 1;
 fi;
 
+DLDITOOL=/opt/wonderful/thirdparty/blocksds/core/tools/dlditool/dlditool;
 
+cd $APP
 
-DLDITOOL=/opt/wonderful/thirdparty/blocksds/core/tools/dlditool/dlditool
+git clone --recursive https://github.com/LNH-team/pico-loader.git && cd pico-loader
+git submodule update --init
+make
 
-
-
-
+cd ..
+### PICO-LOADER
 
 
 
