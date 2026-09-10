@@ -7,7 +7,7 @@ fi
 
 docker compose up --build -d;
 
-chmod +x ./.copy.sh; ./.copy.sh;
+chmod +x ./script/copy; ./script/copy;
 
 docker stop ds-pico-setup;
 docker rm ds-pico-setup;
