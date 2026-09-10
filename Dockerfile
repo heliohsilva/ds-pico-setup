@@ -69,18 +69,6 @@ ENTRYPOINT ["./build_projects"]
 
 
 
-# # Compiling pico-loader
-
-# RUN git clone --recursive https://github.com/LNH-team/pico-loader.git && cd pico-loader && \
-#     git submodule update --init && \
-#     make
-
-# # Compiling DLDI driver
-
-# RUN git clone --recursive https://github.com/LNH-team/dspico-dldi.git && cd dspico-dldi && \
-#     git submodule update --init && \
-#     make
-
 # # Compiling DSPico Bootloader
 
 # RUN git clone --recursive https://github.com/LNH-team/dspico-bootloader.git && cd dspico-bootloader && \

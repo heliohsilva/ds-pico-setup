@@ -58,6 +58,11 @@ make
 
 cd ..
 
+### DSPICO BOOTLOADER
+RUN git clone --recursive https://github.com/LNH-team/dspico-bootloader.git && cd dspico-bootloader
+git submodule update --init
+make
+
 
 
 
