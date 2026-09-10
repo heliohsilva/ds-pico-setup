@@ -60,16 +60,21 @@ DLDIDIR=${APP}/dspico-dldi
 cd ..
 
 ### DSPICO BOOTLOADER
+BOOTLOADERDIR=${APP}/dspico-bootloader
+
 git clone --recursive https://github.com/LNH-team/dspico-bootloader.git && cd dspico-bootloader
 git submodule update --init
 make
 
 ## Patch bootloader
 ${DLDITOOL} ${DLDIDIR}/DSpico.dldi ./BOOTLOADER.nds
+cp ./BOOTLOADER.nds ${APP}/BOOTLOADER.nds
 
 cd ..
+rm -r ${BOOTLOADERDIR}
 
 ### DSROMENCRYPTON
+DSENCDIR=${APP}/DSRomEncryptor
 
 git clone --recursive https://github.com/Gericom/DSRomEncryptor.git && cd DSRomEncryptor
 git submodule update --init
@@ -77,8 +82,29 @@ dotnet build
 
 cd ..
 
+EXEDIR=${DSENCDIR}/DSRomEncryptor/bin/Debug/net9.0
+EXE=${EXEDIR}/DSRomEncryptor
 
+cp ${MISC}/bios* ${EXEDIR}/
+$EXE ${APP}/BOOTLOADER.nds default.nds
 
+rm -r ${DSENCDIR}
+
+### WRFUXXED
+if [ $HAS_DSI7 = 0 ]; then
+    WRDIR=${APP}/dspico-wrfuxxed
+    git clone --recursive https://github.com/LNH-team/dspico-wrfuxxed.git && cd dspico-wrfuxxed
+    git submodule update --init
+    make
+
+    $DLDITOOL ${DLDIDIR}/DSpico.dldi ${WRDIR}/uartBufv060.bin
+
+    cp ${WRDIR}/uartBufv060.bin ${APP}/
+
+    rm -r ${WRDIR}
+fi
+
+cd ..
 
 
 

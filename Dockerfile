@@ -67,22 +67,6 @@ RUN chmod +x ./build_projects
 
 ENTRYPOINT ["./build_projects"]
 
-
-# ENV EXEDIR=/app/DSRomEncryptor/DSRomEncryptor/bin/Debug/net9.0
-# ENV EXE=$EXEDIR/DSRomEncryptor
-
-# RUN cp $MISC/bios* $EXEDIR/
-# RUN $EXE /app/dspico-bootloader/BOOTLOADER.nds default.nds
-
-# # Setting up Wrfuxxed
-
-# RUN git clone --recursive https://github.com/LNH-team/dspico-wrfuxxed.git && cd dspico-wrfuxxed && \
-#     git submodule update --init && \
-#     make
-
-# RUN $DLDITOOL /app/dspico-dldi/DSpico.dldi /app/dspico-wrfuxxed/uartBufv060.bin
-
-
 # # Setting up dspico-firmware
 
 # ENV ROMS=/app/dspico-firmware/roms
