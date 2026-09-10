@@ -68,13 +68,6 @@ RUN chmod +x ./build_projects
 ENTRYPOINT ["./build_projects"]
 
 
-
-# # Compiling DSPico Bootloader
-
-# RUN git clone --recursive https://github.com/LNH-team/dspico-bootloader.git && cd dspico-bootloader && \
-#     git submodule update --init && \
-#     make
-
 # ## Patch the bootloader
 # RUN $DLDITOOL /app/dspico-dldi/DSpico.dldi /app/dspico-bootloader/BOOTLOADER.nds
 

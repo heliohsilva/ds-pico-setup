@@ -40,8 +40,6 @@ if [ "${HASWRFR}" = 0 ] || [ "${HAS_DS7}" = 0 ]; then
         exit 1;
 fi;
 
-DLDITOOL=/opt/wonderful/thirdparty/blocksds/core/tools/dlditool/dlditool;
-
 cd $APP
 
 ### PICO-LOADER
@@ -56,12 +54,21 @@ git clone --recursive https://github.com/LNH-team/dspico-dldi.git && cd dspico-d
 git submodule update --init
 make
 
+DLDITOOL=/opt/wonderful/thirdparty/blocksds/core/tools/dlditool/dlditool;
+DLDIDIR=${APP}/dspico-dldi
+
 cd ..
 
 ### DSPICO BOOTLOADER
-RUN git clone --recursive https://github.com/LNH-team/dspico-bootloader.git && cd dspico-bootloader
+git clone --recursive https://github.com/LNH-team/dspico-bootloader.git && cd dspico-bootloader
 git submodule update --init
 make
+
+## Patch bootloader
+${DLDITOOL} ${DLDIDIR}/DSpico.dldi ./BOOTLOADER.nds
+
+cd ..
+
 
 
 
